@@ -1,6 +1,6 @@
 # Color Tools
 
-A collection of color tools, mostly written in C++.
+A collection of tools that deal with color.
 
 Not all of these tools will have much of a purpose beyond allowing me to explore color theory in programming.
 
