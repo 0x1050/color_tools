@@ -17,14 +17,16 @@ struct Color {
         Color(std::string n, std::string h)  {
             name = n;
             hex = h;
-            fromHex();
+            hex2rgb();
+            rgb2hsl();
         }
         void print() {
             std::cout << name << std::endl;
             std::cout << "RGB: " << r << " " << g  << " " << b << std::endl;
             std::cout << "HSL: " << h << " " << s  << " " << l << std::endl;
             std::cout << "Hex: " << hex << std::endl;
-            fromHex();
+            hex2rgb();
+            rgb2hsl();
         }
         std::string html() {
             std::string ret= "<div style=\"background-color: ";
@@ -44,74 +46,43 @@ struct Color {
 
             return ret;
         }
-        void fromHex() {
-            //get rgb
+
+        void hex2rgb() {
             r = std::stoi(hex.substr(0,2),0,16);
             g = std::stoi(hex.substr(2,2),0,16);
             b = std::stoi(hex.substr(4,2),0,16);
-            //get hsl
-            double rt = round((1.0*r)/255 * 100)/100;
-            double gt = round((1.0*g)/255 * 100)/100;
-            double bt = round((1.0*b)/255 * 100)/100;
+        }
+
+        void rgb2hsl() {
+            //convert RGB to temporary values, range 0-1
+            //round to 2 decimal places
+            float rt = 1.0*r/255;
+            float gt = 1.0*g/255;
+            float bt = 1.0*b/255;
 
             //Get min/max
-            double ma;
-            if (rt > gt && rt > bt)
-                ma = rt;
-            else if (gt > bt)
-                ma = gt;
-            else
-                ma = bt;
-            double mi;
-            if (rt < gt && rt < bt)
-                mi = rt;
-            else if (gt < bt)
-                mi = gt;
-            else
-                mi = bt;
+            double ma = fmax(fmax(rt,gt),bt);
+            double mi = fmin(fmin(rt,gt),bt);
 
-            //Calculate luminance
-            l = round((mi+ma)/2*100);
+            double chroma = ma-mi;
 
-            //Calculate saturation
-            if (mi == ma)
-                s = 0;
-            else { //Remember that luminance is a percentage
-                if (l <= 50)
-                    s = round((ma-mi)/(ma+mi)*100);
+            if ( chroma == 0) // No saturation?
+                h = s = 0;
+            else {
+                if (l <= .5)
+                    s = chroma/(ma+mi);
                 else
-                    s = round((ma-mi)/(2.0-ma-mi)*100);
+                    s = chroma/(2-ma-mi);
+
+                if (ma == rt)
+                    h = (gt-bt)/chroma + 2;
+                else if (ma == gt)
+                    h = (rt-gt)/chroma+2;
+                else
+                    h = (rt-gt)/chroma+4;
+
+                h /= 6;
             }
-
-            //Calculate hue
-            double ht;
-            if (ma == rt)
-                ht = (gt-bt)/(ma-mi);
-            else if (ma == gt)
-                ht = 2.0+(rt-gt)/(ma-mi);
-            else
-                ht = 4.0+(rt-gt)/(ma-mi);
-
-            ht = round(ht*60);
-            while (ht < 0) ht += 360;
-            h = ht;
-//            //******************************* temporary for debugging ***********/
-//            std::string max;
-//            if (rt == ma)
-//                max = "red";
-//            else if (bt == ma)
-//                max = "blue";
-//            else
-//                max = "green";
-//            std::string min;
-//            if (rt == mi)
-//                min = "red";
-//            else if (bt == mi)
-//                min = "blue";
-//            else
-//                min = "green";
-//
-//            std::cout << "max: " << max << " min: " << min << std::endl;
         }
 };
 
