@@ -7,7 +7,7 @@ struct Color {
     private:
         std::string name;
         std::string hex;
-        int r,g,b,h,s,l;
+        int r,g,b, h,s,l;
     public:
         Color() {
             name = "Black";
@@ -54,35 +54,48 @@ struct Color {
         }
 
         void rgb2hsl() {
-            //convert RGB to temporary values, range 0-1
-            //round to 2 decimal places
-            float rt = 1.0*r/255;
-            float gt = 1.0*g/255;
-            float bt = 1.0*b/255;
+            //Calculate temp values as double to make calculation easier
+            //rgb -> range 0.0-1.0
+            double rt = 1.0*r/255;
+            double gt = 1.0*g/255;
+            double bt = 1.0*b/255;
 
-            //Get min/max
-            double ma = fmax(fmax(rt,gt),bt);
-            double mi = fmin(fmin(rt,gt),bt);
+            double max = fmax(fmax(rt,gt),bt);
+            double min = fmin(fmin(rt,gt),bt);
+            double delta = max-min;
 
-            double chroma = ma-mi;
-
-            if ( chroma == 0) // No saturation?
-                h = s = 0;
+            double ht;
+            double st;
+            double lt = (min+max)/2;
+            if (min == max) // If the min and max is 0, all values
+                st = ht = 0;// are equal, and we have a shade of grey
             else {
-                if (l <= .5)
-                    s = chroma/(ma+mi);
+                if (lt <= 0.5)
+                    st = delta/(max+min);
                 else
-                    s = chroma/(2-ma-mi);
+                    st = delta/(2.0-max-min);
 
-                if (ma == rt)
-                    h = (gt-bt)/chroma + 2;
-                else if (ma == gt)
-                    h = (rt-gt)/chroma+2;
-                else
-                    h = (rt-gt)/chroma+4;
+                //Get distances
+                double rd = (max-rt)/delta;
+                double gd = (max-gt)/delta;
+                double bd = (max-bt)/delta;
+                if (rt == max)
+                    ht = bd-gd;
+                else if (gt == max)
+                    ht = 2.0 + rd-bd;
+                else if (bt == max)
+                    ht = 4.0 + gd-rd;
 
-                h /= 6;
+                //Convert to degrees, align to circle
+                ht *= 60;
+                if (ht < 0)
+                    ht += 360;
             }
+
+            //Now we simply convert to decimal percentages
+            h = round(ht);
+            s = round(st*100);
+            l = round(lt*100);
         }
 };
 

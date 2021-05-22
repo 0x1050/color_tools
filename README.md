@@ -9,6 +9,6 @@ Not all of these tools will have much of a purpose beyond allowing me to explore
 
 | Name     | Purpose                               | Status                                                                                              |
 | ----     | -------                               | ------                                                                                              |
-| **hex2** | Convert from HexRGB to RGB255 and HSL | Mostly working. Needs to be reorganized once I squash the last few bugs in the conversion algorithm |
+| **hex2** | Convert from HexRGB to RGB255 and HSL | Works, needs some cleaning up                                                                       |
 
 More to come soon!

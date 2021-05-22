@@ -13,16 +13,7 @@ Edit `dcolors` to include the colors that you like, then:
 $ make
 $ ./hex2
 ```
-This outputs out.html, which you can open in your browser
-
-
-## Todo
-
-- Fix Bug: There is an error in the conversion algorithm when two of the RGB values are equal
-- Delete debug statements in functions
-- Refactor
-- Create header
-- Add ability to take arguments
+This outputs out.html, which you can open in your browser.
 
 ## Notes
 
