@@ -2,8 +2,7 @@
 
 Take a string in the form `name, FFFFFF` and returns RGB and HSL values.
 
-Currently, it takes an input file, and exports html, which you can pipe into a file.
-This is for the meantime, as my test set is the current CSS3 colors set and I'd rather scan a page for errors than look up a bunch of conversions and write a complicated test suite.
+Currently takes an input file, outputs JSON.
 
 ## Usage
 
@@ -13,7 +12,6 @@ Edit `dcolors` to include the colors that you like, then:
 $ make
 $ ./hex2
 ```
-This outputs out.html, which you can open in your browser.
 
 ## Notes
 
