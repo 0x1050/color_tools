@@ -77,25 +77,27 @@ struct Color {
                 else
                     s = delta/(2.0-max-min);
 
-                double rdistance = (max-rtmp)/delta;
-                double gdistance = (max-gtmp)/delta;
-                double bdistance = (max-btmp)/delta;
+//                double rdistance = (max-rtmp)/delta;
+//                double gdistance = (max-gtmp)/delta;
+//                double bdistance = (max-btmp)/delta;
                 if (rtmp == max)
-                    h = bdistance-gdistance;
+                    h = fmod(((gtmp-btmp)/delta), 6.0);
                 else if (gtmp == max)
-                    h = 2.0 + rdistance-bdistance;
+                    h = 2.0 + ((btmp-rtmp)/delta);
                 else if (btmp == max)
-                    h = 4.0 + gdistance-rdistance;
+                    h = 4.0 + ((rtmp-gtmp)/delta);
 
                 h *= 60;
                 if (h < 0)
                     h += 360;
                 h = roundf(h);
-
             }
                 this->h = h;
                 this->s = s*100;
-                this->l = l*100;
+                l *= 1000;
+                l = round(l);
+                l /= 10;
+                this->l = l;
         }
         void printVals() {
             std::cout << "Name: " << name << std::endl;
@@ -125,12 +127,16 @@ int main(int ac, char ** av) {
 
     out.open("colors.json");
     out << "[\n";
-    for (int i=0; i<count;i++) {
-        out << colors[i].jsonify();
-        if (i == count-2)
-            break;
-        out << ",";
-        out << std::endl;
+    if (colors.size() == 1)
+        out << colors[0].jsonify();
+    else {
+        for (int i=0; i<count;i++) {
+            out << colors[i].jsonify();
+            if (i == count-2)
+                break;
+            out << ",";
+            out << std::endl;
+        }
     }
     out << "\n]\n";
     out.close();
