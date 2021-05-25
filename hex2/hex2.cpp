@@ -33,18 +33,18 @@ struct Color {
         }
 
         std::string jsonify() {
-            std::string ret = "\"" + name + "\": {\n";
-            ret += "  \"Name\": \"" + name + "\",\n";
-            ret += "  \"RGB\": [\""
+            std::string ret = "  {\n";
+            ret += "    \"Name\": \"" + name + "\",\n";
+            ret += "    \"RGB\": [\""
                 + std::to_string(r) + "\",\""
                 + std::to_string(g) + "\",\""
                 + std::to_string(b) + "\"],\n";
-            ret += "  \"HSL\": [\""
+            ret += "    \"HSL\": [\""
                 + std::to_string(int(h)) + "\","
                 + two_places(s) + ","
                 + two_places(l) + "],\n";
-            ret += "  \"hex\": \"" + hex + "\"";
-            ret += "}";
+            ret += "    \"Hex\": \"" + hex + "\"";
+            ret += "\n  }";
             std::cout << ret << std::endl;
 
             return ret;
@@ -124,7 +124,7 @@ int main(int ac, char ** av) {
     }
 
     out.open("colors.json");
-    out << "{\n";
+    out << "[\n";
     for (int i=0; i<count;i++) {
         out << colors[i].jsonify();
         if (i == count-2)
@@ -132,7 +132,7 @@ int main(int ac, char ** av) {
         out << ",";
         out << std::endl;
     }
-    out << "}\n";
+    out << "\n]\n";
     out.close();
     return 0;
 }
